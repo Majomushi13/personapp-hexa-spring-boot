@@ -48,39 +48,34 @@ public class PhoneMenu {
         } while (!isValid);
     }
 
+    
     private void menuOpciones(PhoneInputAdapterCli phoneInputAdapterCli, Scanner keyboard) {
         boolean isValid = false;
         do {
-            try {
-                mostrarMenuOpciones();
-                int opcion = leerOpcion(keyboard);
-                switch (opcion) {
-                case OPCION_REGRESAR_MOTOR_PERSISTENCIA:
-                    isValid = true;
-                    break;
+            mostrarMenuOpciones();
+            int opcion = leerOpcion(keyboard);
+            switch (opcion) {
                 case OPCION_VER_TODO:
                     phoneInputAdapterCli.listPhones();
                     break;
                 case OPCION_AGREGAR_TELEFONO:
-                    // Implementar la lógica para agregar un teléfono
+                    phoneInputAdapterCli.addPhone(keyboard);
                     break;
                 case OPCION_ELIMINAR_TELEFONO:
-                    // Implementar la lógica para eliminar un teléfono
+                    phoneInputAdapterCli.deletePhone(keyboard);
                     break;
                 case OPCION_ACTUALIZAR_TELEFONO:
-                    // Implementar la lógica para actualizar un teléfono
+                    phoneInputAdapterCli.updatePhone(keyboard);
                     break;
-                // agregar más opciones según sea necesario
+                case OPCION_REGRESAR_MOTOR_PERSISTENCIA:
+                    isValid = true;
+                    break;
                 default:
                     log.warn("La opción elegida no es válida.");
-                }
-            } catch (InputMismatchException e) {
-                log.warn("Solo se permiten números.");
-                keyboard.next(); // limpiar el buffer del escáner
             }
         } while (!isValid);
     }
-
+    
     private void mostrarMenuOpciones() {
         System.out.println("----------------------");
         System.out.println(OPCION_VER_TODO + " - Ver todos los teléfonos");

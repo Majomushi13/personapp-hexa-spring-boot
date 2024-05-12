@@ -18,14 +18,18 @@ public class TelefonoMapperMaria {
     }
 
     public TelefonoEntity fromDomainToAdapter(Phone phone, Person owner) {
-        TelefonoEntity telefonoEntity = fromDomainToAdapter(phone); // Reuse the single argument method
-        if (owner != null) {
+        TelefonoEntity telefonoEntity = new TelefonoEntity();
+        telefonoEntity.setNum(phone.getNumber());
+        telefonoEntity.setOper(phone.getCompany());
+        if (owner != null && owner.getIdentification() != null) {
             PersonaEntity duenioEntity = new PersonaEntity();
             duenioEntity.setCc(owner.getIdentification());
             telefonoEntity.setDuenio(duenioEntity);
+        } else {
+            throw new IllegalStateException("El dueño es requerido y no puede ser nulo");
         }
         return telefonoEntity;
-    }
+    }    
 
     public Phone fromAdapterToDomain(TelefonoEntity telefonoEntity) {
         Phone phone = new Phone();

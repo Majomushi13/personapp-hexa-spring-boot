@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import co.edu.javeriana.as.personapp.application.port.out.PhoneOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
@@ -28,10 +29,16 @@ public class PhoneOutputAdapterMaria implements PhoneOutputPort {
 
     @Override
     public Phone save(Phone phone) {
-        log.debug("Into save on Adapter MariaDB");
-        TelefonoEntity persistedTelefono = telefonoRepositoryMaria.save(telefonoMapperMaria.fromDomainToAdapter(phone));
-        return telefonoMapperMaria.fromAdapterToDomain(persistedTelefono);
+        try {
+            TelefonoEntity telefonoEntity = telefonoMapperMaria.fromDomainToAdapter(phone, phone.getOwner());
+            TelefonoEntity savedEntity = telefonoRepositoryMaria.save(telefonoEntity);
+            return telefonoMapperMaria.fromAdapterToDomain(savedEntity);
+        } catch (DataIntegrityViolationException e) {
+            log.error("Error al guardar el teléfono: ", e);
+            throw new RuntimeException("No se puede guardar el teléfono debido a un error de integridad de datos.");
+        }
     }
+
 
     @Override
     public void delete(String number) {
