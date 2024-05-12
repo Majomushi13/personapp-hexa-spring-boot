@@ -16,7 +16,10 @@ public class PersonaMenu {
 
 	private static final int OPCION_REGRESAR_MOTOR_PERSISTENCIA = 0;
 	private static final int OPCION_VER_TODO = 1;
-	// mas opciones
+	private static final int OPCION_AGREGAR_PERSONA = 2;
+	private static final int OPCION_ACTUALIZAR_PERSONA = 3;
+	private static final int OPCION_ELIMINAR_PERSONA = 4;
+
 
 	public void iniciarMenu(PersonaInputAdapterCli personaInputAdapterCli, Scanner keyboard) {
 		boolean isValid = false;
@@ -56,24 +59,36 @@ public class PersonaMenu {
 					isValid = true;
 					break;
 				case OPCION_VER_TODO:
-					personaInputAdapterCli.historial();					
+					personaInputAdapterCli.historial();
 					break;
-				// mas opciones
+				case OPCION_AGREGAR_PERSONA:
+					personaInputAdapterCli.addPerson(keyboard);
+					break;
+				case OPCION_ACTUALIZAR_PERSONA:
+					personaInputAdapterCli.updatePerson(keyboard);
+					break;
+				case OPCION_ELIMINAR_PERSONA:
+					personaInputAdapterCli.deletePerson(keyboard);
+					break;
 				default:
 					log.warn("La opción elegida no es válida.");
 				}
 			} catch (InputMismatchException e) {
 				log.warn("Solo se permiten números.");
+				keyboard.next(); // Clear the invalid input
 			}
 		} while (!isValid);
 	}
-
+	
 	private void mostrarMenuOpciones() {
 		System.out.println("----------------------");
 		System.out.println(OPCION_VER_TODO + " para ver todas las personas");
-		// implementar otras opciones
+		System.out.println(OPCION_AGREGAR_PERSONA + " para agregar una persona");
+		System.out.println(OPCION_ACTUALIZAR_PERSONA + " para actualizar una persona");
+		System.out.println(OPCION_ELIMINAR_PERSONA + " para eliminar una persona");
 		System.out.println(OPCION_REGRESAR_MOTOR_PERSISTENCIA + " para regresar");
 	}
+	
 
 	private void mostrarMenuMotorPersistencia() {
 		System.out.println("----------------------");
