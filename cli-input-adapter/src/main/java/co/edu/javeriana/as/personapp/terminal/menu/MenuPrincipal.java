@@ -8,18 +8,21 @@ import org.springframework.stereotype.Controller;
 
 import co.edu.javeriana.as.personapp.terminal.adapter.PersonaInputAdapterCli;
 import co.edu.javeriana.as.personapp.terminal.adapter.PhoneInputAdapterCli;
+import co.edu.javeriana.as.personapp.terminal.adapter.ProfessionInputAdapterCli;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 public class MenuPrincipal {
     
-    // Beans
     @Autowired
     private PersonaInputAdapterCli personaInputAdapterCli;
 
     @Autowired
     private PhoneInputAdapterCli phoneInputAdapterCli;
+
+    @Autowired
+    private ProfessionInputAdapterCli professionInputAdapterCli;  // Agregar la inyección del adaptador de profesiones
 
     private static final int SALIR = 0;
     private static final int MODULO_PERSONA = 1;
@@ -27,14 +30,15 @@ public class MenuPrincipal {
     private static final int MODULO_TELEFONO = 3;
     private static final int MODULO_ESTUDIO = 4;
 
-    // Menus
     private final PersonaMenu personaMenu;
     private final PhoneMenu phoneMenu;
+    private final ProfessionMenu professionMenu;  // Crear una instancia del menú de profesiones
     private final Scanner keyboard;
 
     public MenuPrincipal() {
         this.personaMenu = new PersonaMenu();
-        this.phoneMenu = new PhoneMenu();  // Create an instance of PhoneMenu
+        this.phoneMenu = new PhoneMenu();
+        this.professionMenu = new ProfessionMenu();  // Inicializar el menú de profesiones
         this.keyboard = new Scanner(System.in);
     }
 
@@ -56,6 +60,9 @@ public class MenuPrincipal {
                 log.info("Returned to Main Menu from Phone Module");
                 break;
             case MODULO_PROFESION:
+                professionMenu.iniciarMenu(professionInputAdapterCli, keyboard);
+                log.info("Returned to Main Menu from Profession Module");
+                break;
             case MODULO_ESTUDIO:
                 log.warn("Implementation pending for this module");
                 break;

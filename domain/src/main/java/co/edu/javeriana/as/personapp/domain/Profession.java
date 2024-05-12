@@ -14,11 +14,17 @@ import lombok.ToString;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Profession {
-	@NonNull
-	private Integer identification;
-	@NonNull
-	private String name;
-	private String description;
-	@ToString.Exclude
-	private List<Study> studies;
+    @NonNull
+    private Integer identification;
+    @NonNull
+    private String name;
+    private String description;
+    @ToString.Exclude
+    private List<Study> studies;
+
+    public Profession(Integer identification, String name, String description) {
+        this.identification = identification;
+        this.name = name;
+        this.description = description;
+    }
 }
