@@ -12,6 +12,7 @@ import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.ProfessionUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.domain.Profession;
 import co.edu.javeriana.as.personapp.mapper.ProfesionMapperRest;
@@ -76,5 +77,19 @@ public class ProfesionInputAdapterRest {
             log.warn(e.getMessage());
             return null;
         }
+    }
+
+    public ProfesionResponse actualizarProfesion(Integer id, ProfesionRequest request) throws InvalidOptionException, NoExistException {
+        log.info("Updating profession with ID {} in database: {}", id, request.getDatabase());
+        setProfesionOutputPortInjection(request.getDatabase());
+        Profession profession = profesionMapperRest.fromAdapterToDomain(request);
+        Profession updatedProfession = profesionInputPort.edit(id, profession);
+        return profesionMapperRest.fromDomainToAdapterRestMaria(updatedProfession);
+    }
+
+    public void eliminarProfesion(Integer id, String database) throws InvalidOptionException, NoExistException {
+        log.info("Deleting profession with ID {} from database: {}", id, database);
+        setProfesionOutputPortInjection(database);
+        profesionInputPort.drop(id);
     }
 }
