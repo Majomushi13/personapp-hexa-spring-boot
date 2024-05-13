@@ -72,25 +72,37 @@ public class StudyInputAdapterCli {
             System.out.print("Ingrese el ID de la profesión: ");
             Integer professionId = keyboard.nextInt();
             keyboard.nextLine();  // Consume the newline left-over
-            
-            Person person = personInputPort.findOne(personId);  // Use personInputPort to find the person
-            Profession profession = professionInputPort.findOne(professionId);  // Use professionInputPort to find the profession
-            
+    
+            // Attempt to fetch the Person and Profession
+            Person person = personInputPort.findOne(personId);
+            Profession profession = professionInputPort.findOne(professionId);
+    
+            if (person == null) {
+                System.out.println("No se encontró la persona con el ID dado.");
+                return;
+            }
+            if (profession == null) {
+                System.out.println("No se encontró la profesión con el ID dado.");
+                return;
+            }
+    
             System.out.print("Ingrese la fecha de graduación (YYYY-MM-DD): ");
             String dateString = keyboard.next();
             keyboard.nextLine();  // Consume any newline left over after the date input
             System.out.print("Ingrese el nombre de la universidad: ");
             String universityName = keyboard.nextLine();
-            
+    
             Study study = new Study(person, profession, LocalDate.parse(dateString), universityName);
             Study createdStudy = studyInputPort.create(study);
             System.out.println("Estudio creado con éxito: " + studyMapperCli.fromDomainToAdapterCli(createdStudy));
         } catch (NoExistException e) {
-            System.out.println("Error: No se pudo encontrar la persona o la profesión con los IDs dados.");
+            System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error general: " + e.getMessage());
         }
     }
+    
+    
 
     public void updateStudy(Scanner keyboard) {
         try {
