@@ -1,9 +1,7 @@
 package co.edu.javeriana.as.personapp.application.usecase;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Qualifier;
-
 import co.edu.javeriana.as.personapp.application.port.in.StudyInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.StudyOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.UseCase;
@@ -33,19 +31,19 @@ public class StudyUseCase implements StudyInputPort {
     }
 
     @Override
-    public Study edit(Integer id, Study study) throws NoExistException {
-        Study oldStudy = studyPersistence.findById(id);
-        if (oldStudy != null)
+    public Study edit(Integer idProf, Integer ccPer, Study study) throws NoExistException {
+        if (studyPersistence.findById(idProf, ccPer) != null) {
             return studyPersistence.save(study);
-        throw new NoExistException("The study with id " + id + " does not exist in the database, cannot be edited");
+        }
+        throw new NoExistException("The study does not exist in the database, cannot be edited");
     }
 
     @Override
-    public Boolean drop(Integer id) throws NoExistException {
-        Study oldStudy = studyPersistence.findById(id);
-        if (oldStudy != null)
-            return studyPersistence.delete(id);
-        throw new NoExistException("The study with id " + id + " does not exist in the database, cannot be dropped");
+    public Boolean drop(Integer idProf, Integer ccPer) throws NoExistException {
+        if (studyPersistence.findById(idProf, ccPer) != null) {
+            return studyPersistence.delete(idProf, ccPer);
+        }
+        throw new NoExistException("The study does not exist in the database, cannot be dropped");
     }
 
     @Override
@@ -55,11 +53,12 @@ public class StudyUseCase implements StudyInputPort {
     }
 
     @Override
-    public Study findOne(Integer id) throws NoExistException {
-        Study study = studyPersistence.findById(id);
-        if (study != null)
+    public Study findOne(Integer idProf, Integer ccPer) throws NoExistException {
+        Study study = studyPersistence.findById(idProf, ccPer);
+        if (study != null) {
             return study;
-        throw new NoExistException("The study with id " + id + " does not exist in the database, cannot be found");
+        }
+        throw new NoExistException("The study does not exist in the database, cannot be found");
     }
 
     @Override

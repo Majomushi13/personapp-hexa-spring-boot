@@ -2,12 +2,9 @@ package co.edu.javeriana.as.personapp.mariadb.adapter;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import co.edu.javeriana.as.personapp.application.port.out.StudyOutputPort;
 import co.edu.javeriana.as.personapp.domain.Study;
 import co.edu.javeriana.as.personapp.mariadb.entity.EstudiosEntity;
@@ -35,28 +32,27 @@ public class StudyOutputAdapterMaria implements StudyOutputPort {
         return studyMapperMaria.fromAdapterToDomain(savedEntity);
     }
 
-@Override
-public Boolean delete(Integer id) {
-    log.debug("Deleting study from MariaDB");
-    try {
-        EstudiosEntityPK primaryKey = new EstudiosEntityPK(/* Aquí pasas los valores de idProf y ccPer */);
-        studyRepositoryMaria.deleteById(primaryKey);
-        return !studyRepositoryMaria.findById(primaryKey).isPresent();
-    } catch (Exception e) {
-        log.error("Error deleting study: ", e);
-        return false;
+    @Override
+    public Boolean delete(Integer idProf, Integer ccPer) {
+        log.debug("Deleting study from MariaDB");
+        try {
+            EstudiosEntityPK primaryKey = new EstudiosEntityPK(idProf, ccPer);
+            studyRepositoryMaria.deleteById(primaryKey);
+            return !studyRepositoryMaria.findById(primaryKey).isPresent();
+        } catch (Exception e) {
+            log.error("Error deleting study: ", e);
+            return false;
+        }
     }
-}
 
-@Override
-public Study findById(Integer id) {
-    log.debug("Finding study by ID in MariaDB");
-    EstudiosEntityPK primaryKey = new EstudiosEntityPK(/* Aquí pasas los valores de idProf y ccPer */);
-    return studyRepositoryMaria.findById(primaryKey)
-        .map(studyMapperMaria::fromAdapterToDomain)
-        .orElse(null);
-}
-
+    @Override
+    public Study findById(Integer idProf, Integer ccPer) {
+        log.debug("Finding study by ID in MariaDB");
+        EstudiosEntityPK primaryKey = new EstudiosEntityPK(idProf, ccPer);
+        return studyRepositoryMaria.findById(primaryKey)
+            .map(studyMapperMaria::fromAdapterToDomain)
+            .orElse(null);
+    }
 
     @Override
     public List<Study> findAll() {

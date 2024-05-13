@@ -106,16 +106,18 @@ public class StudyInputAdapterCli {
 
     public void updateStudy(Scanner keyboard) {
         try {
-            System.out.print("Ingrese el ID del estudio que desea actualizar: ");
-            Integer studyId = keyboard.nextInt();
-            keyboard.nextLine();  // Consume the newline left-over
+            System.out.print("Ingrese el ID de la profesión del estudio que desea actualizar: ");
+            Integer professionId = keyboard.nextInt();
+            System.out.print("Ingrese el ID de la persona del estudio que desea actualizar: ");
+            Integer personId = keyboard.nextInt();
+            keyboard.nextLine();  // Consumir el salto de línea restante
+
+            Study study = studyInputPort.findOne(professionId, personId);
             System.out.print("Ingrese el nuevo nombre de la universidad: ");
             String universityName = keyboard.nextLine();
-
-            Study study = studyInputPort.findOne(studyId);
             study.setUniversityName(universityName);
 
-            Study updatedStudy = studyInputPort.edit(studyId, study);
+            Study updatedStudy = studyInputPort.edit(professionId, personId, study);
             System.out.println("Estudio actualizado con éxito: " + studyMapperCli.fromDomainToAdapterCli(updatedStudy));
         } catch (NoExistException e) {
             System.out.println("Error: " + e.getMessage());
@@ -124,10 +126,12 @@ public class StudyInputAdapterCli {
 
     public void deleteStudy(Scanner keyboard) {
         try {
-            System.out.print("Ingrese el ID del estudio que desea eliminar: ");
-            Integer studyId = keyboard.nextInt();
+            System.out.print("Ingrese el ID de la profesión del estudio que desea eliminar: ");
+            Integer professionId = keyboard.nextInt();
+            System.out.print("Ingrese el ID de la persona del estudio que desea eliminar: ");
+            Integer personId = keyboard.nextInt();
 
-            Boolean deleted = studyInputPort.drop(studyId);
+            Boolean deleted = studyInputPort.drop(professionId, personId);
             if (deleted) {
                 System.out.println("Estudio eliminado con éxito!");
             } else {

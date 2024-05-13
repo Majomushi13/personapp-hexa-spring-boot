@@ -31,27 +31,24 @@ public class StudyOutputAdapterMongo implements StudyOutputPort {
     }
 
     @Override
-    public Boolean delete(Integer id) {
-        log.debug("Into delete on Adapter MongoDB");
-        studyRepositoryMongo.deleteById(String.valueOf(id));
-        return studyRepositoryMongo.findById(String.valueOf(id)).isEmpty();
+    public Boolean delete(Integer idProf, Integer ccPer) {
+        String id = idProf + "-" + ccPer;  // Asumiendo que el ID es una concatenación
+        studyRepositoryMongo.deleteById(id);
+        return studyRepositoryMongo.findById(id).isEmpty();
+    }
+
+    @Override
+    public Study findById(Integer idProf, Integer ccPer) {
+        String id = idProf + "-" + ccPer;  // Asumiendo que el ID es una concatenación
+        return studyRepositoryMongo.findById(id)
+            .map(estudiosMapperMongo::fromAdapterToDomain)
+            .orElse(null);
     }
 
     @Override
     public List<Study> findAll() {
-        log.debug("Into find on Adapter MongoDB");
         return studyRepositoryMongo.findAll().stream()
-                .map(estudiosMapperMongo::fromAdapterToDomain)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Study findById(Integer id) {
-        log.debug("Into findById on Adapter MongoDB");
-        if (studyRepositoryMongo.findById(String.valueOf(id)).isEmpty()) {
-            return null;
-        } else {
-            return estudiosMapperMongo.fromAdapterToDomain(studyRepositoryMongo.findById(String.valueOf(id)).get());
-        }
+            .map(estudiosMapperMongo::fromAdapterToDomain)
+            .collect(Collectors.toList());
     }
 }
