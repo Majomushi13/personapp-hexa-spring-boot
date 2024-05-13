@@ -1,4 +1,4 @@
-/* package co.edu.javeriana.as.personapp.model.request;
+package co.edu.javeriana.as.personapp.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +19,3 @@ public class ProfesionRequest {
     }
 
 }
- */

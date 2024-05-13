@@ -1,4 +1,4 @@
-/* package co.edu.javeriana.as.personapp.controller;
+package co.edu.javeriana.as.personapp.controller;
 
 import java.util.List;
 
@@ -39,4 +39,3 @@ public class ProfesionControllerV1 {
         return profesionInputAdapterRest.crearProfesion(request);
     }
 }
- */

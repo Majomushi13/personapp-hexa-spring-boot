@@ -1,4 +1,4 @@
-/* package co.edu.javeriana.as.personapp.adapter;
+package co.edu.javeriana.as.personapp.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +24,11 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfesionInputAdapterRest {
 
     @Autowired
-    @Qualifier("profesionOutputAdapterMaria")
+    @Qualifier("professionOutputAdapterMaria")
     private ProfessionOutputPort profesionOutputPortMaria;
 
     @Autowired
-    @Qualifier("profesionOutputAdapterMongo")
+    @Qualifier("professionOutputAdapterMongo")
     private ProfessionOutputPort profesionOutputPortMongo;
 
     @Autowired
@@ -52,10 +52,12 @@ public class ProfesionInputAdapterRest {
         log.info("Fetching professional history from Input Adapter");
         try {
             if(setProfesionOutputPortInjection(database).equalsIgnoreCase(DatabaseOption.MARIA.toString())){
-                return profesionInputPort.findAll().stream().map(profesionMapperRest::fromDomainToAdapterRest)
+                return profesionInputPort.findAll().stream()
+                        .map(profesionMapperRest::fromDomainToAdapterRestMaria)
                         .collect(Collectors.toList());
             }else {
-                return profesionInputPort.findAll().stream().map(profesionMapperRest::fromDomainToAdapterRest)
+                return profesionInputPort.findAll().stream()
+                        .map(profesionMapperRest::fromDomainToAdapterRestMongo)
                         .collect(Collectors.toList());
             }
             
@@ -69,11 +71,10 @@ public class ProfesionInputAdapterRest {
         try {
             setProfesionOutputPortInjection(request.getDatabase());
             Profession profession = profesionInputPort.create(profesionMapperRest.fromAdapterToDomain(request));
-            return profesionMapperRest.fromDomainToAdapterRest(profession);
+            return profesionMapperRest.fromDomainToAdapterRestMaria(profession);
         } catch (InvalidOptionException e) {
             log.warn(e.getMessage());
             return null;
         }
     }
 }
- */
