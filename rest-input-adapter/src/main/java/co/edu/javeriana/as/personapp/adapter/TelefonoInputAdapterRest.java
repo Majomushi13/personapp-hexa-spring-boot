@@ -12,6 +12,7 @@ import co.edu.javeriana.as.personapp.application.port.out.PhoneOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.PhoneUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.domain.Phone;
 import co.edu.javeriana.as.personapp.mapper.TelefonoMapperRest;
@@ -80,5 +81,19 @@ public class TelefonoInputAdapterRest {
             log.warn(e.getMessage());
         }
         return null;
+    }
+
+    public TelefonoResponse actualizarTelefono(String number, TelefonoRequest request) throws InvalidOptionException, NoExistException {
+        log.info("Updating phone with number {} in database: {}", number, request.getDatabase());
+        setPhoneOutputPortInjection(request.getDatabase());
+        Phone phone = telefonoMapperRest.fromAdapterToDomain(request);
+        Phone updatedPhone = phoneInputPort.edit(number, phone);
+        return telefonoMapperRest.fromDomainToAdapterRestMaria(updatedPhone);
+    }
+
+    public void eliminarTelefono(String number, String database) throws InvalidOptionException, NoExistException {
+        log.info("Deleting phone with number {} from database: {}", number, database);
+        setPhoneOutputPortInjection(database);
+        phoneInputPort.delete(number);
     }
 }
