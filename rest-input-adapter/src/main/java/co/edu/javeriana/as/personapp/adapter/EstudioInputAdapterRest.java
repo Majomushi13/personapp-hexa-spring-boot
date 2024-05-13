@@ -7,11 +7,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
+import co.edu.javeriana.as.personapp.application.port.in.ProfessionInputPort;
 import co.edu.javeriana.as.personapp.application.port.in.StudyInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.StudyOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.StudyUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.domain.Profession;
@@ -34,19 +37,28 @@ public class EstudioInputAdapterRest {
     private StudyOutputPort studyOutputPortMongo;
 
     @Autowired
+    private PersonInputPort personInputPort;
+
+    @Autowired
+    private ProfessionInputPort professionInputPort;
+
+    @Autowired
     private EstudiosMapperRest estudiosMapperRest;
 
     StudyInputPort studyInputPort;
 
     private String setStudyOutputPortInjection(String dbOption) throws InvalidOptionException {
-        if (dbOption.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
-            studyInputPort = new StudyUseCase(studyOutputPortMaria);
-            return DatabaseOption.MARIA.toString();
-        } else if (dbOption.equalsIgnoreCase(DatabaseOption.MONGO.toString())) {
-            studyInputPort = new StudyUseCase(studyOutputPortMongo);
-            return  DatabaseOption.MONGO.toString();
-        } else {
-            throw new InvalidOptionException("Invalid database option: " + dbOption);
+        switch (dbOption.toUpperCase()) {
+            case "MARIA":
+            case "MARIADB":
+                studyInputPort = new StudyUseCase(studyOutputPortMaria);
+                return DatabaseOption.MARIA.toString();
+            case "MONGO":
+            case "MONGODB":
+                studyInputPort = new StudyUseCase(studyOutputPortMongo);
+                return DatabaseOption.MONGO.toString();
+            default:
+                throw new InvalidOptionException("Invalid database option: " + dbOption);
         }
     }
 
@@ -68,19 +80,28 @@ public class EstudioInputAdapterRest {
         }
     }
 
- public EstudiosResponse crearEstudio(EstudiosRequest request) {
-    try {
-        setStudyOutputPortInjection(request.getDatabase());
-        // Simulando la obtención de Person y Profession
-        Person person = new Person(); // Aquí deberías obtener o crear la persona real
-        Profession profession = new Profession(); // Aquí deberías obtener o crear la profesión real
-        Study study = studyInputPort.create(estudiosMapperRest.fromAdapterToDomain(request, person, profession));
-        return estudiosMapperRest.fromDomainToAdapterRestMaria(study);
-    } catch (InvalidOptionException e) {
-        log.warn(e.getMessage());
-        return null;
+    
+    public EstudiosResponse crearEstudio(EstudiosRequest request, String database) {
+        log.info("Creating new study through Input Adapter for database {}", database);
+        try {
+            setStudyOutputPortInjection(database);
+            Person person = personInputPort.findOne(request.getPersonId());
+            Profession profession = professionInputPort.findOne(request.getProfessionId());
+    
+            if (person == null || profession == null) {
+                log.warn("Person or Profession not found");
+                return null; // Podrías considerar devolver una respuesta más específica o lanzar una excepción personalizada.
+            }
+    
+            Study study = new Study(person, profession, request.getGraduationDate(), request.getUniversityName());
+            Study savedStudy = studyInputPort.create(study);
+            return estudiosMapperRest.fromDomainToAdapterRest(savedStudy, database);
+        } catch (InvalidOptionException | NoExistException e) {
+            log.error("Error in creating study: {}", e.getMessage());
+            return null; // Considera manejar de forma diferente dependiendo del tipo de error.
+        }
     }
+    
+
 }
 
-
-}

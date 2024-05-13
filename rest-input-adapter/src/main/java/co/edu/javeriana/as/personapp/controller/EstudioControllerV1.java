@@ -3,7 +3,9 @@ package co.edu.javeriana.as.personapp.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,10 +34,18 @@ public class EstudioControllerV1 {
         return estudioInputAdapterRest.historialEstudios(database.toUpperCase());
     }
 
-    @ResponseBody
-    @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public EstudiosResponse crearEstudio(@RequestBody EstudiosRequest request) {
-        log.info("Entering method crearEstudio in the API controller");
-        return estudioInputAdapterRest.crearEstudio(request);
+    @PostMapping(path = "/create/{database}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<EstudiosResponse> createStudy(@RequestBody EstudiosRequest request, @PathVariable String database) {
+        try {
+            EstudiosResponse response = estudioInputAdapterRest.crearEstudio(request, database);
+            if (response != null) {
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
+
 }

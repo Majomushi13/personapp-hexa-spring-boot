@@ -21,7 +21,8 @@ public class EstudiosMapperRest {
         return fromDomainToAdapterRest(study, "MongoDB");
     }
 
-    private EstudiosResponse fromDomainToAdapterRest(Study study, String database) {
+    // Cambiado de private a public para permitir acceso desde otras clases
+    public EstudiosResponse fromDomainToAdapterRest(Study study, String database) {
         return new EstudiosResponse(
                 study.getPerson().getIdentification(), 
                 study.getProfession().getIdentification(), 

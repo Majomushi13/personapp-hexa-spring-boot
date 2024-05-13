@@ -78,7 +78,6 @@ public class TelefonoInputAdapterRest {
             return telefonoMapperRest.fromDomainToAdapterRestMaria(phone);
         } catch (InvalidOptionException e) {
             log.warn(e.getMessage());
-            // Return empty or error-specific response as needed
         }
         return null;
     }
