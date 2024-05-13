@@ -36,6 +36,8 @@ public class TelefonoMapperMongo {
 	}
 
 	private @NonNull Person validateOwner(PersonaDocument duenio) {
-		return duenio != null ? personaMapperMongo.fromAdapterToDomain(duenio) : new Person();
+		Person owner = new Person();
+		owner.setIdentification(duenio.getId());
+		return owner;
 	}
 }

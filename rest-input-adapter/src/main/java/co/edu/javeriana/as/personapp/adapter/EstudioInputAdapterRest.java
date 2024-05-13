@@ -45,7 +45,7 @@ public class EstudioInputAdapterRest {
     @Autowired
     private EstudiosMapperRest estudiosMapperRest;
 
-    StudyInputPort studyInputPort;
+    private StudyInputPort studyInputPort;
 
     private String setStudyOutputPortInjection(String dbOption) throws InvalidOptionException {
         switch (dbOption.toUpperCase()) {
@@ -80,28 +80,46 @@ public class EstudioInputAdapterRest {
         }
     }
 
-    
     public EstudiosResponse crearEstudio(EstudiosRequest request, String database) {
         log.info("Creating new study through Input Adapter for database {}", database);
         try {
             setStudyOutputPortInjection(database);
             Person person = personInputPort.findOne(request.getPersonId());
             Profession profession = professionInputPort.findOne(request.getProfessionId());
-    
+
             if (person == null || profession == null) {
                 log.warn("Person or Profession not found");
-                return null; // Podrías considerar devolver una respuesta más específica o lanzar una excepción personalizada.
+                return null;
             }
-    
+
             Study study = new Study(person, profession, request.getGraduationDate(), request.getUniversityName());
             Study savedStudy = studyInputPort.create(study);
             return estudiosMapperRest.fromDomainToAdapterRest(savedStudy, database);
         } catch (InvalidOptionException | NoExistException e) {
             log.error("Error in creating study: {}", e.getMessage());
-            return null; // Considera manejar de forma diferente dependiendo del tipo de error.
+            return null;
         }
     }
-    
 
+    public EstudiosResponse actualizarEstudio(Integer idProf, Integer ccPer, EstudiosRequest request, String database) throws InvalidOptionException, NoExistException {
+        log.info("Updating study for profession ID {} and person ID {} in database: {}", idProf, ccPer, database);
+        setStudyOutputPortInjection(database);
+        Person person = personInputPort.findOne(request.getPersonId());
+        Profession profession = professionInputPort.findOne(request.getProfessionId());
+
+        if (person == null || profession == null) {
+            log.warn("Person or Profession not found");
+            return null;
+        }
+
+        Study study = new Study(person, profession, request.getGraduationDate(), request.getUniversityName());
+        Study updatedStudy = studyInputPort.edit(idProf, ccPer, study);
+        return estudiosMapperRest.fromDomainToAdapterRest(updatedStudy, database);
+    }
+
+    public void eliminarEstudio(Integer idProf, Integer ccPer, String database) throws InvalidOptionException, NoExistException {
+        log.info("Deleting study for profession ID {} and person ID {} from database: {}", idProf, ccPer, database);
+        setStudyOutputPortInjection(database);
+        studyInputPort.drop(idProf, ccPer);
+    }
 }
-
