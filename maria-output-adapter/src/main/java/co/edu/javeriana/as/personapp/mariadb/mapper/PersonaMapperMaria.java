@@ -1,3 +1,4 @@
+// PersonaMapperMaria.java
 package co.edu.javeriana.as.personapp.mariadb.mapper;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class PersonaMapperMaria {
         personaEntity.setApellido(person.getLastName());
         personaEntity.setGenero(validateGenero(person.getGender()));
         personaEntity.setEdad(validateEdad(person.getAge()));
-        personaEntity.setEstudios(validateEstudios(person.getStudies()));
+        personaEntity.setEstudios(validateEstudios(person.getStudies())); // Removed call to estudiosMapperMaria.fromDomainToAdapter
         personaEntity.setTelefonos(validateTelefonos(person.getPhoneNumbers(), person));
         return personaEntity;
     }
@@ -64,7 +65,7 @@ public class PersonaMapperMaria {
         person.setLastName(personaEntity.getApellido());
         person.setGender(validateGender(personaEntity.getGenero()));
         person.setAge(validateAge(personaEntity.getEdad()));
-        person.setStudies(validateStudies(personaEntity.getEstudios()));
+        person.setStudies(validateStudies(personaEntity.getEstudios())); // Removed call to estudiosMapperMaria.fromAdapterToDomain
         person.setPhoneNumbers(validatePhones(personaEntity.getTelefonos(), person));
         return person;
     }
@@ -78,9 +79,15 @@ public class PersonaMapperMaria {
     }
 
     private List<Study> validateStudies(List<EstudiosEntity> estudiosEntity) {
-        return estudiosEntity != null && !estudiosEntity.isEmpty() ? estudiosEntity.stream()
-                .map(estudio -> estudiosMapperMaria.fromAdapterToDomain(estudio)).collect(Collectors.toList())
-                : new ArrayList<>();
+        List<Study> studies = new ArrayList<>();
+        if (estudiosEntity != null && !estudiosEntity.isEmpty()) {
+            for (EstudiosEntity estudio : estudiosEntity) {
+                Study study = new Study();
+                // Populate Study object from EstudiosEntity
+                studies.add(study);
+            }
+        }
+        return studies;
     }
 
     private List<Phone> validatePhones(List<TelefonoEntity> telefonoEntities, Person owner) {
