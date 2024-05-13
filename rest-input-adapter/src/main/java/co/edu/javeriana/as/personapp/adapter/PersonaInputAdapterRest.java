@@ -12,6 +12,7 @@ import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.PersonUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.mapper.PersonaMapperRest;
@@ -63,9 +64,23 @@ public class PersonaInputAdapterRest {
         log.info("Creating new person in database: {}", request.getDatabase());
         setPersonOutputPortInjection(request.getDatabase());
         Person person = personaMapperRest.fromAdapterToDomain(request);
-        log.info("Person mapped: {}", person); // Agregar log para verificar el objeto mapeado
+        log.info("Person mapped: {}", person);
         Person savedPerson = personInputPort.create(person);
-        log.info("Person saved: {}", savedPerson); // Agregar log para verificar el objeto guardado
+        log.info("Person saved: {}", savedPerson);
         return personaMapperRest.fromDomainToAdapterRest(savedPerson, request.getDatabase());
+    }
+
+    public PersonaResponse actualizarPersona(Integer id, PersonaRequest request) throws InvalidOptionException, NoExistException {
+        log.info("Updating person with ID {} in database: {}", id, request.getDatabase());
+        setPersonOutputPortInjection(request.getDatabase());
+        Person person = personaMapperRest.fromAdapterToDomain(request);
+        Person updatedPerson = personInputPort.edit(id, person);
+        return personaMapperRest.fromDomainToAdapterRest(updatedPerson, request.getDatabase());
+    }
+
+    public void eliminarPersona(Integer id, String database) throws InvalidOptionException, NoExistException {
+        log.info("Deleting person with ID {} from database: {}", id, database);
+        setPersonOutputPortInjection(database);
+        personInputPort.drop(id);
     }
 }
