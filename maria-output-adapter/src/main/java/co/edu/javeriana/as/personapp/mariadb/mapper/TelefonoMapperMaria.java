@@ -42,7 +42,7 @@ public class TelefonoMapperMaria {
             owner.setLastName(telefonoEntity.getDuenio().getApellido());
             phone.setOwner(owner);
         } else {
-            phone.setOwner(new Person()); // Or handle this case as you see fit
+            phone.setOwner(new Person()); 
         }
         return phone;
     }

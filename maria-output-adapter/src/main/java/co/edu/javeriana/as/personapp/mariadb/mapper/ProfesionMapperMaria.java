@@ -1,4 +1,3 @@
-// ProfesionMapperMaria.java
 package co.edu.javeriana.as.personapp.mariadb.mapper;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ProfesionMapperMaria {
 
     public Profession fromAdapterToDomain(ProfesionEntity profesionEntity) {
         if (profesionEntity == null) {
-            return null; // O manejar de otra manera según el diseño de tu aplicación
+            return null; 
         }
         Profession profession = new Profession();
         profession.setIdentification(profesionEntity.getId());

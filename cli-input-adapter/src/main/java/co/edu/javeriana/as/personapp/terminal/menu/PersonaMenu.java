@@ -75,7 +75,7 @@ public class PersonaMenu {
 				}
 			} catch (InputMismatchException e) {
 				log.warn("Solo se permiten números.");
-				keyboard.next(); // Clear the invalid input
+				keyboard.next();
 			}
 		} while (!isValid);
 	}

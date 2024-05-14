@@ -69,7 +69,7 @@ public class PhoneInputAdapterCli {
             System.out.print("Ingrese la cédula del dueño del teléfono: ");
             Integer ownerId = keyboard.nextInt();
     
-            Person owner = personInputPort.findOne(ownerId);  // Asegúrate de que este método esté implementado y disponible
+            Person owner = personInputPort.findOne(ownerId);  
             if (owner == null) {
                 System.out.println("El dueño con la cédula " + ownerId + " no existe.");
                 return;
@@ -116,7 +116,7 @@ public class PhoneInputAdapterCli {
         try {
             System.out.print("Ingrese el número del teléfono que desea eliminar: ");
             String number = keyboard.next();
-            phoneInputPort.delete(number);  // Puede lanzar NoExistException
+            phoneInputPort.delete(number);  
             System.out.println("Teléfono eliminado con éxito!");
         } catch (NoExistException e) {
             System.out.println("Error al eliminar el teléfono: " + e.getMessage());

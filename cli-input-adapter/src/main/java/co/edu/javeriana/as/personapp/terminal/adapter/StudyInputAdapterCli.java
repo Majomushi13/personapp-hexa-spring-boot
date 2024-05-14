@@ -88,7 +88,7 @@ public class StudyInputAdapterCli {
     
             System.out.print("Ingrese la fecha de graduación (YYYY-MM-DD): ");
             String dateString = keyboard.next();
-            keyboard.nextLine();  // Consume any newline left over after the date input
+            keyboard.nextLine(); 
             System.out.print("Ingrese el nombre de la universidad: ");
             String universityName = keyboard.nextLine();
     
@@ -110,7 +110,7 @@ public class StudyInputAdapterCli {
             Integer professionId = keyboard.nextInt();
             System.out.print("Ingrese el ID de la persona del estudio que desea actualizar: ");
             Integer personId = keyboard.nextInt();
-            keyboard.nextLine();  // Consumir el salto de línea restante
+            keyboard.nextLine();  
 
             Study study = studyInputPort.findOne(professionId, personId);
             System.out.print("Ingrese el nuevo nombre de la universidad: ");

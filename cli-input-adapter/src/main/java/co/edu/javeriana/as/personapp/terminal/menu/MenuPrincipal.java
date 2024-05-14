@@ -26,7 +26,7 @@ public class MenuPrincipal {
     private ProfessionInputAdapterCli professionInputAdapterCli;
 
     @Autowired
-    private StudyInputAdapterCli studyInputAdapterCli;  // Agregar la inyección del adaptador de estudios
+    private StudyInputAdapterCli studyInputAdapterCli;  
 
     private static final int SALIR = 0;
     private static final int MODULO_PERSONA = 1;
@@ -37,14 +37,14 @@ public class MenuPrincipal {
     private final PersonaMenu personaMenu;
     private final PhoneMenu phoneMenu;
     private final ProfessionMenu professionMenu;
-    private final StudyMenu studyMenu;  // Crear una instancia del menú de estudios
+    private final StudyMenu studyMenu;
     private final Scanner keyboard;
 
     public MenuPrincipal() {
         this.personaMenu = new PersonaMenu();
         this.phoneMenu = new PhoneMenu();
         this.professionMenu = new ProfessionMenu();
-        this.studyMenu = new StudyMenu();  // Inicializar el menú de estudios
+        this.studyMenu = new StudyMenu();  
         this.keyboard = new Scanner(System.in);
     }
 
@@ -95,7 +95,7 @@ public class MenuPrincipal {
             return keyboard.nextInt();
         } catch (InputMismatchException e) {
             log.warn("Only numbers are allowed.");
-            keyboard.next(); // clear scanner buffer
+            keyboard.next(); 
             return leerOpcion();
         }
     }

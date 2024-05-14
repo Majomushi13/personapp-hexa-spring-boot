@@ -14,7 +14,6 @@ public class StudyMapperCli {
         StudyModelCli studyModelCli = new StudyModelCli();
         studyModelCli.setIdProf(study.getProfession().getIdentification()); 
         
-        // Verificar si el objeto Person es null antes de acceder a sus métodos
         if (study.getPerson() != null) {
             studyModelCli.setCcPer(study.getPerson().getIdentification());
         }

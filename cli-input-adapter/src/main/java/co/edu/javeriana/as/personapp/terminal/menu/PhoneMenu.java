@@ -19,8 +19,7 @@ public class PhoneMenu {
     private static final int OPCION_AGREGAR_TELEFONO = 2;
     private static final int OPCION_ELIMINAR_TELEFONO = 3;
     private static final int OPCION_ACTUALIZAR_TELEFONO = 4;
-    // mas opciones según sea necesario
-
+  
     public void iniciarMenu(PhoneInputAdapterCli phoneInputAdapterCli, Scanner keyboard) {
         boolean isValid = false;
         do {
@@ -98,7 +97,7 @@ public class PhoneMenu {
             return keyboard.nextInt();
         } catch (InputMismatchException e) {
             log.warn("Solo se permiten números.");
-            keyboard.next(); // limpiar el buffer del escáner
+            keyboard.next(); 
             return leerOpcion(keyboard);
         }
     }

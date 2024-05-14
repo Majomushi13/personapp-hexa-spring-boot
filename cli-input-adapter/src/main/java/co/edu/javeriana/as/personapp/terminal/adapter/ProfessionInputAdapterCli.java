@@ -72,7 +72,7 @@ public class ProfessionInputAdapterCli {
         try {
             System.out.print("Ingrese el ID de la profesión que desea actualizar: ");
             Integer id = keyboard.nextInt();
-            keyboard.nextLine();  // Consumir el resto de la línea después de la entrada numérica
+            keyboard.nextLine(); 
             System.out.print("Ingrese el nuevo nombre de la profesión: ");
             String name = keyboard.nextLine();
             System.out.print("Ingrese la nueva descripción de la profesión: ");

@@ -33,7 +33,6 @@ public class EstudiosMapperMaria {
             estudioPK.setCcPer(study.getPerson().getIdentification());
             estudioPK.setIdProf(study.getProfession().getIdentification());
             
-            // Map the profession and person entities
             ProfesionEntity profesionEntity = profesionMapperMaria.fromDomainToAdapter(study.getProfession());
             PersonaEntity personaEntity = personaMapperMaria.fromDomainToAdapter(study.getPerson());
 

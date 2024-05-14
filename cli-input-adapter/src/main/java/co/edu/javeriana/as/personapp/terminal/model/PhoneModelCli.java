@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 public class PhoneModelCli {
     private String number;
     private String company;
-    private String ownerName;  // Simplificación para mostrar el nombre del dueño en la CLI
-
+    private String ownerName;  
     @Override
     public String toString() {
         return "PhoneModelCli{" +

@@ -96,7 +96,7 @@ public class ProfessionMenu {
             return keyboard.nextInt();
         } catch (InputMismatchException e) {
             log.warn("Solo se permiten números.");
-            keyboard.next(); // limpiar el buffer del escáner
+            keyboard.next(); 
             return leerOpcion(keyboard);
         }
     }
