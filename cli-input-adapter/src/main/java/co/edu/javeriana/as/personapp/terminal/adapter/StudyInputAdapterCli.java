@@ -71,9 +71,8 @@ public class StudyInputAdapterCli {
             Integer personId = keyboard.nextInt();
             System.out.print("Ingrese el ID de la profesión: ");
             Integer professionId = keyboard.nextInt();
-            keyboard.nextLine();  // Consume the newline left-over
+            keyboard.nextLine(); 
     
-            // Attempt to fetch the Person and Profession
             Person person = personInputPort.findOne(personId);
             Profession profession = professionInputPort.findOne(professionId);
     
@@ -101,8 +100,6 @@ public class StudyInputAdapterCli {
             System.out.println("Error general: " + e.getMessage());
         }
     }
-    
-    
 
     public void updateStudy(Scanner keyboard) {
         try {
@@ -111,18 +108,26 @@ public class StudyInputAdapterCli {
             System.out.print("Ingrese el ID de la persona del estudio que desea actualizar: ");
             Integer personId = keyboard.nextInt();
             keyboard.nextLine();  
-
+    
             Study study = studyInputPort.findOne(professionId, personId);
+            if (study == null) {
+                System.out.println("No se encontró el estudio con los ID dados.");
+                return;
+            }
+    
             System.out.print("Ingrese el nuevo nombre de la universidad: ");
             String universityName = keyboard.nextLine();
             study.setUniversityName(universityName);
-
+    
             Study updatedStudy = studyInputPort.edit(professionId, personId, study);
             System.out.println("Estudio actualizado con éxito: " + studyMapperCli.fromDomainToAdapterCli(updatedStudy));
         } catch (NoExistException e) {
             System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error general: " + e.getMessage());
         }
     }
+    
 
     public void deleteStudy(Scanner keyboard) {
         try {
